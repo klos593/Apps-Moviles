@@ -20,7 +20,7 @@ export default function Card(props: CardProps){
   const [cardProps, setCardProps] = useState<CardProps>({
     text: props.text,
     textColor: '#ffffff',
-    backgroundColor: '#0026ffff'
+    backgroundColor: '#008cffff'
   });
 
   const changeCardProps = () => {
