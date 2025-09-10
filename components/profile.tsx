@@ -1,26 +1,55 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useState } from 'react';
+import { Modal, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
-type ProfileProps = {
-    name: string
-}
+export default function Profile() {
 
-export default function Profile(props: ProfileProps) {
+    const [modalVisible,setModalVisible] = useState(false);
+    const [name, setName] = useState('Agustin Kloster');
+    const [tempName, setTempName] = useState('');
 
-    const changeName = () => {
-
+    const openModal = () => {
+        setTempName(name)
+        setModalVisible(true)
     }
 
+    const handleNameChange = () => {
+        setName(tempName)
+        setModalVisible(false)
+    }
     return (
-        <View style = {styles.container}>  
-            <Text style = {styles.text}>  
-                {props.name}
-            </Text>
-            <Pressable style = {styles.pressable} onPress={changeName}>
-                <Text style = {styles.pressableText}>
-                    Cambiar nombre
+        <>
+            <Modal animationType="slide" 
+            visible={modalVisible}
+            transparent={true}
+            onRequestClose={() => {
+            setModalVisible(!modalVisible);
+          }}>
+                <View style = {styles.modalOverlay}>
+                    <View style = {styles.containerModal}>  
+                        <TextInput 
+                            style = {styles.input}
+                            onChangeText={setTempName} 
+                            value={tempName}                     
+                        />
+                        <Pressable style = {styles.pressable} onPress={handleNameChange}>
+                            <Text style = {styles.pressableText}>
+                                Guardar
+                            </Text>
+                        </Pressable>
+                    </View>
+                </View>
+            </Modal>
+            <View style = {styles.container}>  
+                <Text style = {styles.text}>  
+                    {name}
                 </Text>
-            </Pressable>
-        </View>
+                <Pressable style = {styles.pressable} onPress={openModal}>
+                    <Text style = {styles.pressableText}>
+                        Cambiar nombre
+                    </Text>
+                </Pressable>
+            </View>
+        </>
     );
 }
 
@@ -28,7 +57,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'center'
     },
     pressable: {
         margin: 20,
@@ -43,5 +72,25 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 20
-    }
+    },
+    modalOverlay: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        flex: 1,
+        backgroundColor: "rgba(0,0,0,0.5)",
+    },
+    containerModal: {
+        width: "80%",
+        padding: 20,
+        backgroundColor: "white",
+        borderRadius: 15,
+        alignItems: "center",
+    },
+    input: {
+        borderWidth: 1,
+        borderColor: "#ccc",
+        borderRadius: 8,
+        width: "100%",
+        padding: 10,
+  },
 })
