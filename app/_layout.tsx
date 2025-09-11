@@ -25,6 +25,13 @@ export default function RootLayout() {
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="plus" color={color} />,
         }}
       />;
+      <Tabs.Screen
+        name="gallery"
+        options={{
+          title: 'Galeria',
+          tabBarIcon: ({ color }) => <FontAwesome size={28} name="photo" color={color} />,
+        }}
+      />;
     </Tabs>
   );
 }
