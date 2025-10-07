@@ -1,11 +1,14 @@
-import { useState } from 'react'
+import { createProduct, getProducts, Product } from '@/api/api'
+import { useEffect, useState } from 'react'
 import { FlatList, Modal, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
-import { data } from "../assets/data/products"
 import Item from "../components/product"
 
 const Index = () => {
 
-    const [filteredData, setFilteredData] = useState(data);
+
+
+    const [data,setData] = useState <Product[]>([])
+    const [filteredData, setFilteredData] = useState <Product[]>([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [title,setTitle] = useState('');
     const [description,setDescription] = useState('');
@@ -20,8 +23,22 @@ const Index = () => {
     }
 
     const handleProductAgregation = () => {
+        const data = {"title": title, "description": description, "price": price, "image": 'https://picsum.photos/202'}
+        createProduct(data)
         setModalVisible(false);
     }
+
+    useEffect(() => {
+        const fun = async () => {
+        const prod = await getProducts();
+        setData(prod);
+        }
+        try {
+            fun()
+        } catch (error) {
+            console.log(error)
+        }
+    }, []);
 
     return(
         <>
