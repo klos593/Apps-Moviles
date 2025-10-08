@@ -1,24 +1,25 @@
-import { ImageSourcePropType } from "react-native";
-import { URL } from "url";
+import { URL } from "./url";
 
-export type Product = {
-  id: Number;
-  title: string;
-  image: ImageSourcePropType;   
-  price: number;
-  description: string;
+export type ProductDTO = {
+    id: number;
+    title: string;
+    image: string;
+    price: number;
+    description: string;
 };
 
-export async function getProducts(): Promise<Product[]> {
-  const products = await fetch(`${URL}/products`);
-  return products.json();
+export async function getProducts(): Promise<ProductDTO[]> {
+    const r = await fetch(`${URL}/products`);
+    if(!r.ok) throw new Error(`GET /products ${r.status}`);
+    return r.json();
 }
 
-export async function createProduct(body: Omit<Product, "id">): Promise<Product> {
-  const r = await fetch(`${URL}/products`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-  return r.json();
+export async function createProduct(body: Omit<ProductDTO, "id">): Promise<ProductDTO> {
+    const r = await fetch(`${URL}/products`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+    });
+    if (!r.ok) throw new Error(`POST /products ${r.status}`);
+    return r.json();
 }

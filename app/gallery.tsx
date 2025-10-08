@@ -1,18 +1,18 @@
-import { createProduct, getProducts, Product } from '@/api/api'
+import { createProduct, getProducts, ProductDTO } from '@/api/api'
 import { useEffect, useState } from 'react'
-import { FlatList, Modal, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
+import { ActivityIndicator, FlatList, Modal, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
 import Item from "../components/product"
 
 const Index = () => {
 
-
-
-    const [data,setData] = useState <Product[]>([])
-    const [filteredData, setFilteredData] = useState <Product[]>([]);
+    const [refresh,setRefresh] = useState(true)
+    const [data,setData] = useState <ProductDTO[]>([])
+    const [filteredData, setFilteredData] = useState <ProductDTO[]>([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [title,setTitle] = useState('');
     const [description,setDescription] = useState('');
-    const [price,setPrice] = useState('');
+    const [price,setPrice] = useState("");
+    const [loading,setLoading] = useState(true);
 
     const filterData = (keyWord: string) => {
         setFilteredData(data.filter(element => element.title.toLowerCase().includes(keyWord.toLowerCase())))
@@ -22,23 +22,31 @@ const Index = () => {
         setModalVisible(true);
     }
 
-    const handleProductAgregation = () => {
-        const data = {"title": title, "description": description, "price": price, "image": 'https://picsum.photos/202'}
-        createProduct(data)
+    const handleProductAgregation = async () => {
+        const data = {title,image: 'https://picsum.photos/202',price: parseFloat(price),description}
+        const newProd = await createProduct(data)
+        setRefresh(prev => !prev)
         setModalVisible(false);
     }
 
     useEffect(() => {
-        const fun = async () => {
-        const prod = await getProducts();
-        setData(prod);
-        }
-        try {
-            fun()
-        } catch (error) {
-            console.log(error)
-        }
-    }, []);
+    async function loadProducts() {
+      try {
+        const data = await getProducts();
+        setData(data);
+        setFilteredData(data);
+      } catch (err: any) {
+        console.log(err);
+      }
+      finally{
+        setLoading(false)
+      }
+    }
+    loadProducts();
+  }, [refresh]);
+
+  if (loading) return <ActivityIndicator size="large" style={{ marginTop: 20 }} />;
+
 
     return(
         <>
@@ -112,7 +120,7 @@ const Index = () => {
                         <Item 
                             title={item.title} 
                             description={item.description} 
-                            image={item.image} 
+                            image={item.image}
                             price={item.price}
                             imageResizeMode={'cover'}
                             favourite={false}

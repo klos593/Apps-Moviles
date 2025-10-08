@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { Image, ImageResizeMode, ImageSourcePropType, Modal, Pressable, StyleSheet, Text, View } from "react-native";
+import { Image, ImageResizeMode, Modal, Pressable, StyleSheet, Text, View } from "react-native";
 
 type ItemProps = {
         title: string,
         description: string,
-        image: ImageSourcePropType,
+        image: string,
         price: number,
         imageResizeMode: ImageResizeMode,
         favourite: boolean,
@@ -44,7 +44,7 @@ const Item = (props: ItemProps) => {
                 onPress={handlePress}
                 onLongPress={handleLongPress}>
                 <View style= {styles.imageContainer}>
-                    <Image source={props.image} style={styles.logo}/>
+                    <Image source={{uri: props.image}} style={styles.logo}/>
                 </View>
                 <View style={styles.infoContainer}>
                     <Text style={styles.title}>{props.title}</Text>
@@ -65,7 +65,7 @@ const Item = (props: ItemProps) => {
                             </Text>
                         </View>
                         <View style={styles.modalImageContainer}>
-                            <Image source={cardProps.image} style={[styles.modalImage , {resizeMode: cardProps.imageResizeMode}]}>  
+                            <Image source={{uri: cardProps.image}} style={[styles.modalImage , {resizeMode: cardProps.imageResizeMode}]}>  
                             </Image>
                         </View>
                         <View style={styles.modalImageButtonsContainer}>
